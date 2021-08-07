@@ -1,6 +1,5 @@
 import argparse
 import torch
-import tqdm
 import json
 import random
 import numpy as np
@@ -47,7 +46,7 @@ test_dict = dict()
 
 print("Making training set....")
 
-for i in tqdm(range(len(train_map["source"]))):
+for i in range(len(train_map["source"])):
     source = train_map["source"][i]
     target = train_map["target"][i]
 
@@ -62,7 +61,7 @@ print("Training set made!!")
 
 print("Making validation set....")
 
-for i in tqdm(range(len(valid_map["source"]))):
+for i in range(len(valid_map["source"])):
     source = valid_map["source"][i]
     pos_node = valid_map["pos_node"][i]
     neg_node = valid_map["neg_node"][i]
@@ -76,7 +75,7 @@ print("Validation set made!!")
 
 print("Making testing set....")
 
-for i in tqdm(range(len(test_map["source"]))):
+for i in range(len(test_map["source"])):
     source = test_map["source"][i]
     pos_node = test_map["pos_node"][i]
     neg_node = test_map["neg_node"][i]
@@ -92,7 +91,7 @@ print("Testing set made!!")
 print("Start making training network")
 network = list()
 
-for i in tqdm(range(len(train_map["source"]))):
+for i in range(len(train_map["source"])):
     source = train_map["source"][i]
     target = train_map["target"][i]
     network.append([source, target])
