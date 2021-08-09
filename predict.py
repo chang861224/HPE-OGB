@@ -1,6 +1,7 @@
 import argparse
 import json
 import torch
+import random
 import numpy as np
 from tqdm import tqdm
 
@@ -14,8 +15,6 @@ parser.add_argument("--embed", type=str, default="ogbl-citation2/node-feat.csv")
 args = parser.parse_args()
 
 embed_path = args.embed
-val_edges = args.val_edges
-test_edges = args.test_edges
 val_percent = args.val_percent
 test_percent = args.test_percent
 
@@ -44,8 +43,10 @@ else:
 num_pos = 1
 num_neg = 1000
 
+val_edges = json.load(open(args.val_edges))
 val_num_sample = int(val_percent / 100 * len(val_edges))
 val_sampled_keys = random.sample(val_edges.keys(), val_num_sample)
+test_edges = json.load(open(args.test_edges))
 test_num_sample = int(test_percent / 100 * len(test_edges))
 test_sampled_keys = random.sample(test_edges.keys(), test_num_sample)
 
@@ -55,6 +56,8 @@ test_mrrs = list()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Predict validation set
+print("Predicting validation set....")
+
 for key in tqdm(val_sampled_keys):
     source = int(key)
     target_nodes = [val_edges[key]["pos_node"]] + val_edges[key]["neg_node"]
@@ -82,6 +85,8 @@ for key in tqdm(val_sampled_keys):
     val_mrrs.append(1. / (rs[0] + 1) if rs.size else 0.)
 
 # Predict test set
+print("Predicting testing set....")
+
 for key in tqdm(test_sampled_keys):
     source = int(key)
     target_nodes = [test_edges[key]["pos_node"]] + test_edges[key]["neg_node"]
@@ -110,4 +115,5 @@ for key in tqdm(test_sampled_keys):
 
 print("===== Prediction Result =====")
 print("Valid MRR: {:.4f}".format(np.mean(val_mrrs)))
-print("Test MRR: {:.4f}".fprmat(np.mean(test_mrrs)))
+print("Test MRR: {:.4f}".format(np.mean(test_mrrs)))
+
