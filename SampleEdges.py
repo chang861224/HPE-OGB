@@ -3,6 +3,7 @@ import torch
 import json
 import random
 import numpy as np
+from tqdm import tqdm
 from ogb.linkproppred import PygLinkPropPredDataset
 
 # Arguments
@@ -46,7 +47,7 @@ test_dict = dict()
 
 print("Making training set....")
 
-for i in range(len(train_map["source"])):
+for i in tqdm(range(len(train_map["source"]))):
     source = train_map["source"][i]
     target = train_map["target"][i]
 
@@ -61,7 +62,7 @@ print("Training set made!!")
 
 print("Making validation set....")
 
-for i in range(len(valid_map["source"])):
+for i in tqdm(range(len(valid_map["source"]))):
     source = valid_map["source"][i]
     pos_node = valid_map["pos_node"][i]
     neg_node = valid_map["neg_node"][i]
@@ -75,7 +76,7 @@ print("Validation set made!!")
 
 print("Making testing set....")
 
-for i in range(len(test_map["source"])):
+for i in tqdm(range(len(test_map["source"]))):
     source = test_map["source"][i]
     pos_node = test_map["pos_node"][i]
     neg_node = test_map["neg_node"][i]
@@ -104,7 +105,7 @@ print("# of samle edges:", num_sample)
 print("Sampling edges....")
 
 with open(train_network, "w") as f:
-    for edge in sample_edges:
+    for edge in tqdm(sample_edges):
         source = edge[0]
         target = edge[1]
         f.write("{} {} 1\n".format(source, target))
