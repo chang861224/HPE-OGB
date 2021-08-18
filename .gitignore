@@ -129,6 +129,4 @@ dmypy.json
 .pyre/
 
 # Generated files and folders
-*.json
-*.txt
 dataset/
