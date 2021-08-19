@@ -9,6 +9,12 @@ In order to implement the codes in this repository, you have to install the Pyth
 - ogb == 1.3.1
 - torch >= 1.6
 
+Or, you can install required Python packages via `requirements.txt`.
+
+```bash
+pip3 install -r requirements.txt
+```
+
 Furthermore, the main method HPE is contained in the repository `smore`, so you have to follow the steps in next section to get and compile the module.
 
 
