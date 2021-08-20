@@ -1,23 +1,23 @@
-#ifndef HPE_NODE_EMBED_H
-#define HPE_NODE_EMBED_H
+#ifndef HPE_H
+#define HPE_H
 
-#include "LINE.h"
+#include "../smore/src/model/LINE.h"
 
 /*****
- * HPE_NODE_EMBED
+ * HPE
  * **************************************************************/
 
-class HPE_node_embed: public LINE {
+class HPE: public LINE {
 
     public:
         
-        HPE_node_embed();
-        ~HPE_node_embed();
+        HPE();
+        ~HPE();
 
         void SaveWeights(string);
 
         // model function
-        void Init(int,string);
+        void Init(int, string);
         void Train(int, int, int, double, double, int);
 
 };
