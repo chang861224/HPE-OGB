@@ -20,8 +20,18 @@ train_percent = args.train_percent
 
 # Load dataset from OGB
 dataset = PygLinkPropPredDataset(name=dataset_name)
+feature = dataset[0]["x"]
 split_edge = dataset.get_edge_split()
 train_edge = split_edge["train"]
+
+# Generate build-in features
+print("Generate build-in features file")
+
+with open("node-feat.txt", "w") as f:
+    for row in tqdm(feature):
+        for feature in row:
+            f.write("{} ".format(round(float(feature), 6)))
+        f.write("\n")
 
 # Sample training network
 print("Start generating training network")
