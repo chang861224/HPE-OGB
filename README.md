@@ -39,6 +39,15 @@ After successfully compiling the module, we can use the methods in `smore`, incl
 
 ## Implement HPE for OGB Link Prediction Task
 
+### Compile HPE
+Because we use the content-based feature to train the model, we use this modified HPE model to train the final embedding. First, we have to go to the root of this repository and compile via the following command:
+
+```bash
+make
+```
+
+After compilation, there is an execution file `hpe` generated.
+
 ### Network Format
 To use HPE in `smore` module, first we have to generate the connection network of our dataset. The format of the network should be like this:
 
@@ -69,7 +78,7 @@ python3 SampleEdges.py --dataset ogbl-citation2 --train_network network.txt --tr
 We use cli constructed in smore to train the network with HPE method. The command is like this:
 
 ```bash
-smore/cli/hpe -train network.txt -save hpe_rep.txt -dimensions 64 -undirected 0 -sample_times 1200 -walk_steps 5 -threads 8
+hpe -train network.txt -embed node-feature.txt -save hpe_rep.txt -dimensions 64 -undirected 0 -sample_times 1200 -walk_steps 5 -threads 8
 ```
 
 The command above means that we train the network, which saved in `network.txt`, using HPE with 1200 sample times  and generate the 64-dimensional embedding for each node. Then we save these embeddings to the file `hpe_rep.txt`. The format in this file should be like this:
