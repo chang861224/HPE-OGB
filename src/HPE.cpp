@@ -29,30 +29,27 @@ void HPE::SaveWeights(string model_name){
 }
 
 void HPE::Init(int dim, string embed_path) {
-    vector< vector<double> > data;
-    data.resize(2927963);
+    vector< vector<double> > vec;
+    vec.resize(2927963);
     ifstream infile;
 
     cout << embed_path << endl;
     infile.open(embed_path);
     
     for(long i = 0 ; i < 2927963 ; i++){
-        data[i].resize(128);
+        vec[i].resize(128);
 
         for(int j = 0 ; j < 128 ; j++){
-            infile >> data[i][j];
+            infile >> vec[i][j];
         }
     }
 
     infile.close();
     
-    //cout<<data[0][0]<<endl;
-    
     this->dim = dim;
     
     cout << "Model Setting:" << endl;
     cout << "\tdimension:\t\t" << dim << endl;
-    //cout << "\tpnet.MAX_vid:\t\t" << pnet.MAX_vid << endl;
     
     w_vertex.resize(pnet.MAX_vid);
     w_context.resize(pnet.MAX_vid);
@@ -63,13 +60,8 @@ void HPE::Init(int dim, string embed_path) {
         w_vertex[vid].resize(dim);
 
         for (int d=0; d<dim;++d){
-            /*if(d==0){
-               cout<< (rand()/(double)RAND_MAX - 0.5) / dim << endl;
-            }*/
-
             //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
-            w_vertex[vid][d] = data[stol(pnet.vertex_hash.keys[vid])][d];
-            //cout<<"\tw_vertex = "<<w_vertex[vid][d]<<endl;
+            w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
         }
     }
 
@@ -78,7 +70,7 @@ void HPE::Init(int dim, string embed_path) {
 
         for (int d=0; d<dim;++d)
             //w_context[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
-            w_context[vid][d] = data[stol(pnet.vertex_hash.keys[vid])][d];
+            w_context[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
     }
 }
 
