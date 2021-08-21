@@ -1,78 +1,141 @@
-#define _GLIBCXX_USE_CXX11_ABI 1
-#include "hpe.h"
+#include "HPE.h"
+#include<iostream>
+#include<fstream>
+#include<vector>
 
-int ArgPos(char *str, int argc, char **argv) {
-    int a;
-    for (a = 1; a < argc; a++) if (!strcmp(str, argv[a])) {
-        if (a == argc - 1) {
-            printf("Argument missing for %s\n", str);
-            exit(1);
+HPE::HPE() {}
+HPE::~HPE() {}
+
+void HPE::SaveWeights(string model_name){
+    
+    cout << "Save Model:" << endl;
+    ofstream model(model_name);
+    if (model)
+    {
+        model << pnet.MAX_vid << " " << dim << endl;
+        for (long vid=0; vid!=pnet.MAX_vid; vid++)
+        {
+            model << pnet.vertex_hash.keys[vid];
+            for (int d=0; d<dim; ++d)
+                model << " " << w_vertex[vid][d];
+            model << endl;
         }
-        return a;
+        cout << "\tSave to <" << model_name << ">" << endl;
     }
-    return -1;
+    else
+    {
+        cout << "\tfail to open file" << endl;
+    }
 }
 
-int main(int argc, char **argv){
+void HPE::Init(int dim, string embed_path) {
+    vector< vector<double> > data;
+    data.resize(2927963);
+    ifstream infile;
+
+    cout << embed_path << endl;
+    infile.open(embed_path);
     
-    int i;
+    for(long i = 0 ; i < 2927963 ; i++){
+        data[i].resize(128);
 
-    if (argc == 1) {
-        printf("[proNet-core]\n");
-        printf("\tcommand line interface for proNet-core\n\n");
-        printf("Options Description:\n");
-        printf("\t-train <string>\n");
-        printf("\t\tTrain the Network data\n");
-        printf("\t-embed <string>\n");
-        printf("\t\tInitial features\n");
-        printf("\t-save <string>\n");
-        printf("\t\tSave the representation data\n");
-        printf("\t-dimensions <int>\n");
-        printf("\t\tDimension of vertex representation; default is 64\n");
-        printf("\t-undirected <int>\n");
-        printf("\t\tWhether the edge is undirected; default is 1\n");
-        printf("\t-negative_samples <int>\n");
-        printf("\t\tNumber of negative examples; default is 5\n");
-        printf("\t-walk_steps <int>\n");
-        printf("\t\tStep of random walk; default is 5\n");
-        printf("\t-sample_times <int>\n");
-        printf("\t\tNumber of training samples *Million; default is 5\n");
-        printf("\t-threads <int>\n");
-        printf("\t\tNumber of training threads; default is 1\n");
-        printf("\t-reg <float>\n");
-        printf("\t\tRegularization term; default is 0.01\n");
-        printf("\t-alpha <float>\n");
-        printf("\t\tInit learning rate; default is 0.025\n");
-
-        printf("Usage:\n");
-        printf("./hpe -train net.txt -save rep.txt -undirected 1 -dimensions 64 -reg 0.01 -sample_times 5 -walk_steps 5 -negative_samples 5 -alpha 0.025 -threads 1\n");
-
-        return 0;
+        for(int j = 0 ; j < 128 ; j++){
+            infile >> data[i][j];
+        }
     }
+
+    infile.close();
     
-    char network_file[100], rep_file[100], embed_file[100];
-    int dimensions=128, undirected=1, negative_samples=5, walk_steps=5, sample_times=10, threads=1;
-    double init_alpha=0.025, reg=0.01;
+    //cout<<data[0][0]<<endl;
+    
+    this->dim = dim;
+    
+    cout << "Model Setting:" << endl;
+    cout << "\tdimension:\t\t" << dim << endl;
+    //cout << "\tpnet.MAX_vid:\t\t" << pnet.MAX_vid << endl;
+    
+    w_vertex.resize(pnet.MAX_vid);
+    w_context.resize(pnet.MAX_vid);
 
-    if ((i = ArgPos((char *)"-train", argc, argv)) > 0) strcpy(network_file, argv[i + 1]);
-    if ((i = ArgPos((char *)"-save", argc, argv)) > 0) strcpy(rep_file, argv[i + 1]);
-    if ((i = ArgPos((char *)"-embed", argc, argv)) > 0) strcpy(embed_file, argv[i + 1]);
-    if ((i = ArgPos((char *)"-undirected", argc, argv)) > 0) undirected = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-dimensions", argc, argv)) > 0) dimensions = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-negative_samples", argc, argv)) > 0) negative_samples = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-walk_steps", argc, argv)) > 0) walk_steps = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-sample_times", argc, argv)) > 0) sample_times = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-reg", argc, argv)) > 0) reg = atof(argv[i + 1]);
-    if ((i = ArgPos((char *)"-alpha", argc, argv)) > 0) init_alpha = atof(argv[i + 1]);
-    if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) threads = atoi(argv[i + 1]);
+    for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
+        //cout<<"\tvid = "<<vid<<endl;
+        //cout<<"\tpnet.vertex_hash.keys[vid] = "<<pnet.vertex_hash.keys[vid]<<endl;
+        w_vertex[vid].resize(dim);
 
-    HPE *hpe;
-    hpe = new HPE();
-    hpe->LoadEdgeList(network_file, undirected);
-    hpe->Init(dimensions, embed_file);
-    hpe->Train(sample_times, walk_steps, negative_samples, reg, init_alpha, threads);
-    hpe->SaveWeights(rep_file);
+        for (int d=0; d<dim;++d){
+            /*if(d==0){
+               cout<< (rand()/(double)RAND_MAX - 0.5) / dim << endl;
+            }*/
 
-   return 0;
+            //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+            w_vertex[vid][d] = data[stol(pnet.vertex_hash.keys[vid])][d];
+            //cout<<"\tw_vertex = "<<w_vertex[vid][d]<<endl;
+        }
+    }
+
+    for (long vid=0; vid<pnet.MAX_vid; ++vid){
+        w_context[vid].resize(dim);
+
+        for (int d=0; d<dim;++d)
+            //w_context[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+            w_context[vid][d] = data[stol(pnet.vertex_hash.keys[vid])][d];
+    }
+}
+
+
+void HPE::Train(int sample_times, int walk_steps, int negative_samples, double reg, double alpha, int workers){
+    
+    omp_set_num_threads(workers);
+
+    cout << "Model:" << endl;
+    cout << "\t[HPE]" << endl;
+
+    cout << "Learning Parameters:" << endl;
+    cout << "\tsample_times:\t\t" << sample_times << endl;
+    cout << "\tnegative_samples:\t" << negative_samples << endl;
+    cout << "\twalk_steps:\t\t" << walk_steps << endl;
+    cout << "\tregularization:\t\t" << reg << endl;
+    cout << "\talpha:\t\t\t" << alpha << endl;
+    cout << "\tworkers:\t\t" << workers << endl;
+
+    cout << "Start Training:" << endl;
+
+    unsigned long long total_sample_times = (unsigned long long)sample_times*1000000;
+    double alpha_min = alpha * 0.0001;
+    double alpha_last;
+    
+    unsigned long long current_sample = 0;
+    unsigned long long jobs = total_sample_times/workers;
+
+    #pragma omp parallel for
+    for (int worker=0; worker<workers; ++worker)
+    {
+        unsigned long long count = 0;
+        double _alpha = alpha;
+        long v1, v2;
+        
+        while (count<jobs)
+        {            
+            v1 = pnet.SourceSample();
+            v2 = pnet.TargetSample(v1);
+            pnet.UpdateCommunity(w_vertex, w_context, v1, v2, dim, reg, walk_steps, negative_samples, _alpha);
+            pnet.UpdatePair(w_vertex, w_context, v2, v1, dim, negative_samples, _alpha);
+            //pnet.UpdateCBOW(w_vertex, w_context, v2, v1, dim, reg, walk_steps, negative_samples, _alpha);
+
+            count ++;
+            if (count % MONITOR == 0)
+            {
+                _alpha = alpha* ( 1.0 - (double)(current_sample)/total_sample_times );
+                current_sample += MONITOR;
+                if (_alpha < alpha_min) _alpha = alpha_min;
+                alpha_last = _alpha;
+                printf("\tAlpha: %.6f\tProgress: %.3f %%%c", _alpha, (double)(current_sample)/total_sample_times * 100, 13);
+                fflush(stdout);
+            }
+
+        }
+
+    }
+    printf("\tAlpha: %.6f\tProgress: 100.00 %%\n", alpha_last);
 
 }
