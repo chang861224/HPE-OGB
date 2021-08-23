@@ -27,24 +27,22 @@ git submodule init
 git submodule update
 ```
 
-After the steps above, we can successfully get the whole codes in `smore`. Because the codes in `smore` is wriiten with c++, we have to enter the repository `smore` and compile the module. So, we can compile the module by following the commands shown below:
-
-```bash
-cd smore
-make
-```
-
-After successfully compiling the module, we can use the methods in `smore`, including HPE.
+After the steps above, we can successfully get the whole codes in `smore`.
 
 
 ## Implement HPE for OGB Link Prediction Task
 
 ### Compile HPE
-Because we use the content-based feature to train the model, we use this modified HPE model to train the final embedding. First, we have to go to the root of this repository and compile via the following command:
+Because the module in `smore` is written in c++, we have to compile the program before using these codes. Therefore, we should go the the root of this repository and compile via the following command:
 
 ```bash
 make
 ```
+
+In this compilation process, we can decompose it into two parts:
+
+- Native `smore` program; because we would like to use the HPE module in this project.
+- Content-based initialized HPE program; because we would like to use the pre-trained features provided by dataset to initial node embedding to train the HPE model.
 
 After compilation, there is an execution file `hpe` generated.
 
