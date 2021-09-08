@@ -1,7 +1,7 @@
 #include "HPE.h"
-#include<iostream>
-#include<fstream>
-#include<vector>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 HPE::HPE() {}
 HPE::~HPE() {}
@@ -55,8 +55,6 @@ void HPE::Init(int dim, string embed_path) {
     w_context.resize(pnet.MAX_vid);
 
     for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
-        //cout<<"\tvid = "<<vid<<endl;
-        //cout<<"\tpnet.vertex_hash.keys[vid] = "<<pnet.vertex_hash.keys[vid]<<endl;
         w_vertex[vid].resize(dim);
 
         for (int d=0; d<dim;++d){
