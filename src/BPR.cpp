@@ -1,5 +1,6 @@
 #include "BPR.h"
 #include <iostream>
+#include <cstring>
 #include <fstream>
 #include <vector>
 #include <omp.h>
@@ -37,7 +38,7 @@ void BPR::SaveWeights(string model_name){
     }
 }
 
-void BPR::Init(int dim, string embed_path) {
+void BPR::Init(int dim, string embed_path, bool directed) {
     vector< vector<double> > vec;
     vec.resize(2927963);
     ifstream infile;
@@ -61,14 +62,30 @@ void BPR::Init(int dim, string embed_path) {
 
     w_vertex.resize(pnet.MAX_vid);
 
-    for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
-        w_vertex[vid].resize(dim);
+    if(directed == true){
+        for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
+            w_vertex[vid].resize(dim);
 
-        for (int d=0; d<dim;++d)
-            //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
-            w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+            char* vertex = strtok(pnet.vertex_hash.keys[vid], "ST");
+            //cout << pnet.vertex_hash.keys[vid] << " " << vertex << endl;
+
+            for (int d=0; d<dim;++d){
+                //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+                //w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+                w_vertex[vid][d] = vec[stol(vertex)][d];
+            }
+        }
     }
+    else{
+        for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
+            w_vertex[vid].resize(dim);
 
+            for (int d=0; d<dim;++d){
+                //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+                w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+            }
+        }
+    }
 }
 
 
