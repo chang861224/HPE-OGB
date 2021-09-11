@@ -30,7 +30,7 @@ if embed_path.startswith("hpe") or embed_path.startswith("bpr"):
         paper_embed = paper_embed.split()
 
         if len(paper_embed) > 1:
-            paper_id = int(paper_id)
+            #paper_id = int(paper_id)
             paper_embed = np.array([float(e) for e in paper_embed])
             embedding[paper_id] = paper_embed
 elif embed_path.startswith("ogbl-citation2/node-feat.csv"):
@@ -59,8 +59,10 @@ pos_scores = list()
 neg_scores = list()
 
 for idx in tqdm(val_sample_index):
-    source = int(valid_edge["source_node"][idx])
-    target = int(valid_edge["target_node"][idx])
+    source = str(int(valid_edge["source_node"][idx]))
+    #source = "S" + str(int(valid_edge["source_node"][idx]))
+    target = str(int(valid_edge["target_node"][idx]))
+    #target = "T" + str(int(valid_edge["target_node"][idx]))
     target_neg = valid_edge["target_node_neg"][idx].tolist()
 
     try:
@@ -72,7 +74,8 @@ for idx in tqdm(val_sample_index):
     neg_score = list()
     for ix, node in enumerate(target_neg):
         try:
-            score = np.dot(embedding[source], embedding[node])
+            score = np.dot(embedding[source], embedding[str(node)])
+            #score = np.dot(embedding[source], embedding["T" + str(node)])
         except:
             score = 0.0
         neg_score.append(score)
@@ -86,8 +89,10 @@ pos_scores = list()
 neg_scores = list()
 
 for idx in tqdm(test_sample_index):
-    source = int(test_edge["source_node"][idx])
-    target = int(test_edge["target_node"][idx])
+    source = str(int(test_edge["source_node"][idx]))
+    #source = "S" + str(int(test_edge["source_node"][idx]))
+    target = str(int(test_edge["target_node"][idx]))
+    #target = "T" + str(int(test_edge["target_node"][idx]))
     target_neg = test_edge["target_node_neg"][idx].tolist()
 
     try:
@@ -99,7 +104,8 @@ for idx in tqdm(test_sample_index):
     neg_score = list()
     for ix, node in enumerate(target_neg):
         try:
-            score = np.dot(embedding[source], embedding[node])
+            score = np.dot(embedding[source], embedding[str(node)])
+            #score = np.dot(embedding[source], embedding["T" + str(node)])
         except:
             score = 0.0
         neg_score.append(score)
