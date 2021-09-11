@@ -19,7 +19,7 @@ val_percent = args.val_percent
 test_percent = args.test_percent
 
 # Load node embedding
-if embed_path.startswith("hpe"):
+if embed_path.startswith("hpe") or embed_path.startswith("bpr"):
     with open(embed_path, "r") as f:
         lines = f.readlines()
 
