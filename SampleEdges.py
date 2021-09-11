@@ -11,12 +11,14 @@ parser = argparse.ArgumentParser(description="OGB Dataset")
 parser.add_argument("--dataset", type=str, default="ogbl-citation2")
 parser.add_argument("--train_network", type=str, default="network.txt")
 parser.add_argument("--train_percent", type=int, default=100)
+parser.add_argument("--directed", type=bool, default=False)
 args = parser.parse_args()
 
 # Save arguments to variables
 dataset_name = args.dataset
 train_network = args.train_network
 train_percent = args.train_percent
+directed = args.directed
 
 # Load dataset from OGB
 dataset = PygLinkPropPredDataset(name=dataset_name)
@@ -53,7 +55,11 @@ with open(train_network, "w") as f:
     for edge in tqdm(sample_edges):
         source = edge[0]
         target = edge[1]
-        f.write("{} {} 1\n".format(source, target))
+
+        if directed == True:
+            f.write("S{} T{} 1\n".format(source, target))
+        else:
+            f.write("{} {} 1\n".format(source, target))
 
 print("Done!!")
 
