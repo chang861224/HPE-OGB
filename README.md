@@ -44,7 +44,7 @@ In this compilation process, we can decompose it into two parts:
 - Native `smore` program; because we would like to use the HPE module in this project.
 - Content-based initialized HPE program; because we would like to use the pre-trained features provided by dataset to initial node embedding to train the HPE model.
 
-After compilation, there is an execution file `hpe` generated.
+After compilation, there are execution files, `HPE` and `BPR`, generated.
 
 ### Network Format
 To use HPE in `smore` module, first we have to generate the connection network of our dataset. The format of the network should be like this:
@@ -65,6 +65,7 @@ In order to generate the network file, we have to run `SampleEdges.py`. There ar
 - `--dataset`: The dataset we want to generate the network. Default dataset is `ogbl-citation2`.
 - `--train_network`: The file name which we want to save this network. Default is `network.txt`.
 - `--train_percent`: The number of percentage of edges we want to train. Default is 100.
+- `--directed`: The edges is directed or not. If it is directed, the source node would be add a tag "S" and the target node would be add a tag "T". Default is `False`.
 
 We set `--train_percent` as 100 and others as default, so we can run `SampleEdges.py` as following:
 
