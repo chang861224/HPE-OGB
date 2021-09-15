@@ -1,7 +1,7 @@
 CC = g++
 CPPFLAGS = -std=c++11 -fPIC -fopenmp -lm -Ofast
-EXE = HPE BPR
-OBJS1 = HPE.o HPE_cli.o BPR.o BPR_cli.o
+EXE = HPE BPR HOPREC
+OBJS1 = HPE.o HPE_cli.o BPR.o BPR_cli.o HOPREC.o HOPREC_cli.o
 OBJS2 = ../smore/src/proNet.o ../smore/src/random.o ../smore/src/util.o ../smore/src/model/LINE.o
 
 all : $(EXE)
