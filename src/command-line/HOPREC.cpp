@@ -1,5 +1,5 @@
 #define _GLIBCXX_USE_CXX11_ABI 1
-#include "HOPREC.h"
+#include "../model/HOPREC.h"
 
 int ArgPos(char *str, int argc, char **argv) {
     int a;
