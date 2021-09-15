@@ -1,34 +1,32 @@
-#ifndef HOPREC_H
-#define HOPREC_H
+#ifndef BPR_H
+#define BPR_H
 
-#include "../../smore/src/model/LINE.h"
+#include "../smore/src/proNet.h"
 
 /*****
- * HOPREC
+ * BPR
  * **************************************************************/
 
-class HOPREC {
+class BPR {
 
     public:
         
-        HOPREC();
-        ~HOPREC();
+        BPR();
+        ~BPR();
         
         proNet pnet;
 
         // parameters
         int dim;                // representation dimensions
         vector< vector<double> > w_vertex;
-        vector< vector<double> > w_context;
 
         // data function
         void LoadEdgeList(string, bool);
-        void LoadFieldMeta(string);
         void SaveWeights(string);
         
         // model function
-        void Init(int);
-        void Train(int, int, double, int);
+        void Init(int, string, bool);
+        void Train(int, int, double, double, int);
 
 };
 

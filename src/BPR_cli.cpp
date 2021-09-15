@@ -1,5 +1,6 @@
 #define _GLIBCXX_USE_CXX11_ABI 1
-#include "../model/HPE.h"
+#include <cstring>
+#include "BPR.h"
 
 int ArgPos(char *str, int argc, char **argv) {
     int a;
@@ -19,7 +20,7 @@ int main(int argc, char **argv){
 
     if (argc == 1) {
         printf("[proNet-core]\n");
-        printf("\tcommand line interface for proNet-core\n\n");
+        printf("\tcommand bpr interface for proNet-core\n\n");
         printf("Options Description:\n");
         printf("\t-train <string>\n");
         printf("\t\tTrain the Network data\n");
@@ -29,50 +30,54 @@ int main(int argc, char **argv){
         printf("\t\tSave the representation data\n");
         printf("\t-dimensions <int>\n");
         printf("\t\tDimension of vertex representation; default is 64\n");
-        printf("\t-undirected <int>\n");
-        printf("\t\tWhether the edge is undirected; default is 1\n");
-        printf("\t-negative_samples <int>\n");
-        printf("\t\tNumber of negative examples; default is 5\n");
-        printf("\t-walk_steps <int>\n");
-        printf("\t\tStep of random walk; default is 5\n");
         printf("\t-sample_times <int>\n");
-        printf("\t\tNumber of training samples *Million; default is 5\n");
+        printf("\t\tNumber of training samples *Million; default is 10\n");
         printf("\t-threads <int>\n");
         printf("\t\tNumber of training threads; default is 1\n");
+        printf("\t-directed <int>\n");
+        printf("\t\tThe network is directed or not; default is 0 (undirected)\n");
         printf("\t-reg <float>\n");
-        printf("\t\tRegularization term; default is 0.01\n");
+        printf("\t\tThe regularization term; default is 0.01\n");
         printf("\t-alpha <float>\n");
         printf("\t\tInit learning rate; default is 0.025\n");
 
         printf("Usage:\n");
-        printf("./HPE -train net.txt -save rep.txt -undirected 1 -dimensions 64 -reg 0.01 -sample_times 5 -walk_steps 5 -negative_samples 5 -alpha 0.025 -threads 1\n");
+        printf("\n[BPR]\n");
+        printf("./BPR -train net.txt -save rep.txt -dimensions 64 -sample_times 10 -alpha 0.025 -threads 1\n");
 
         return 0;
     }
     
     char network_file[100], rep_file[100], embed_file[100];
-    int dimensions=128, undirected=1, negative_samples=5, walk_steps=5, sample_times=10, threads=1;
+    int dimensions=128, negative_samples=5, sample_times=10, threads=1;
     double init_alpha=0.025, reg=0.01;
+    bool directed = false;
 
     if ((i = ArgPos((char *)"-train", argc, argv)) > 0) strcpy(network_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-save", argc, argv)) > 0) strcpy(rep_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-embed", argc, argv)) > 0) strcpy(embed_file, argv[i + 1]);
-    if ((i = ArgPos((char *)"-undirected", argc, argv)) > 0) undirected = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-dimensions", argc, argv)) > 0) dimensions = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-negative_samples", argc, argv)) > 0) negative_samples = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *)"-walk_steps", argc, argv)) > 0) walk_steps = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-sample_times", argc, argv)) > 0) sample_times = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-reg", argc, argv)) > 0) reg = atof(argv[i + 1]);
     if ((i = ArgPos((char *)"-alpha", argc, argv)) > 0) init_alpha = atof(argv[i + 1]);
     if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) threads = atoi(argv[i + 1]);
+    if ((i = ArgPos((char *)"-directed", argc, argv)) > 0){
+        if(strcmp(argv[i + 1], "1") == 0){
+            directed = true;
+        }
+        else{
+            directed = false;
+        }
+    }
+    
+    BPR *bpr;
+    bpr = new BPR();
+    bpr->LoadEdgeList(network_file, 0);
+    bpr->Init(dimensions, embed_file, directed);
+    bpr->Train(sample_times, negative_samples, init_alpha, reg, threads);
+    bpr->SaveWeights(rep_file);
 
-    HPE *hpe;
-    hpe = new HPE();
-    hpe->LoadEdgeList(network_file, undirected);
-    hpe->Init(dimensions, embed_file);
-    hpe->Train(sample_times, walk_steps, negative_samples, reg, init_alpha, threads);
-    hpe->SaveWeights(rep_file);
+    return 0;
 
-   return 0;
 
 }
