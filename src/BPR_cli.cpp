@@ -43,7 +43,7 @@ int main(int argc, char **argv){
 
         printf("Usage:\n");
         printf("\n[BPR]\n");
-        printf("./bpr -train net.txt -save rep.txt -dimensions 64 -sample_times 10 -alpha 0.025 -threads 1\n");
+        printf("./BPR -train net.txt -save rep.txt -dimensions 64 -sample_times 10 -alpha 0.025 -threads 1\n");
 
         return 0;
     }

@@ -45,7 +45,7 @@ int main(int argc, char **argv){
         printf("\t\tInit learning rate; default is 0.025\n");
 
         printf("Usage:\n");
-        printf("./hpe -train net.txt -save rep.txt -undirected 1 -dimensions 64 -reg 0.01 -sample_times 5 -walk_steps 5 -negative_samples 5 -alpha 0.025 -threads 1\n");
+        printf("./HPE -train net.txt -save rep.txt -undirected 1 -dimensions 64 -reg 0.01 -sample_times 5 -walk_steps 5 -negative_samples 5 -alpha 0.025 -threads 1\n");
 
         return 0;
     }
