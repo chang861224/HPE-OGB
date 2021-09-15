@@ -1,7 +1,7 @@
 #ifndef HPE_H
 #define HPE_H
 
-#include "../smore/src/model/LINE.h"
+#include "../../smore/src/model/LINE.h"
 
 /*****
  * HPE
