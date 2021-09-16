@@ -23,6 +23,8 @@ int main(int argc, char **argv){
         printf("Options Description:\n");
         printf("\t-train <string>\n");
         printf("\t\tTrain the Network data\n");
+        printf("\t-embed <string>\n");
+        printf("\t\tInitial features\n");
         printf("\t-save <string>\n");
         printf("\t\tSave the representation data\n");
         printf("\t-field <string>\n");
@@ -45,12 +47,13 @@ int main(int argc, char **argv){
         return 0;
     }
     
-    char network_file[100], rep_file[100], field_file[100];
+    char network_file[100], rep_file[100], field_file[100], embed_file[100];
     int dimensions=64, negative_samples=5, sample_times=10, threads=1, walk_steps=5;
     double init_alpha=0.025, reg=0.01;
 
     if ((i = ArgPos((char *)"-train", argc, argv)) > 0) strcpy(network_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-save", argc, argv)) > 0) strcpy(rep_file, argv[i + 1]);
+    if ((i = ArgPos((char *)"-embed", argc, argv)) > 0) strcpy(embed_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-field", argc, argv)) > 0) strcpy(field_file, argv[i + 1]);
     if ((i = ArgPos((char *)"-dimensions", argc, argv)) > 0) dimensions = atoi(argv[i + 1]);
     if ((i = ArgPos((char *)"-sample_times", argc, argv)) > 0) sample_times = atoi(argv[i + 1]);
@@ -62,7 +65,7 @@ int main(int argc, char **argv){
     hoprec = new HOPREC();
     hoprec->LoadEdgeList(network_file, 1);
     hoprec->LoadFieldMeta(field_file);
-    hoprec->Init(dimensions);
+    hoprec->Init(dimensions, embed_file);
     hoprec->Train(sample_times, walk_steps, init_alpha, threads);
     hoprec->SaveWeights(rep_file);
 

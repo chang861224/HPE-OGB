@@ -1,4 +1,7 @@
 #include "HOPREC.h"
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include <omp.h>
 
 HOPREC::HOPREC() {
@@ -38,7 +41,23 @@ void HOPREC::SaveWeights(string model_name){
     }
 }
 
-void HOPREC::Init(int dim) {
+void HOPREC::Init(int dim, string embed_path) {
+    vector< vector<double> > vec;
+    vec.resize(2927963);
+    ifstream infile;
+
+    cout << embed_path << endl;
+    infile.open(embed_path);
+    
+    for(long i = 0 ; i < 2927963 ; i++){
+        vec[i].resize(128);
+
+        for(int j = 0 ; j < 128 ; j++){
+            infile >> vec[i][j];
+        }
+    }
+
+    infile.close();
    
     this->dim = dim;
     cout << "Model Setting:" << endl;
@@ -47,12 +66,16 @@ void HOPREC::Init(int dim) {
     w_vertex.resize(pnet.MAX_vid);
     w_context.resize(pnet.MAX_vid);
 
-    for (long vid=0; vid<pnet.MAX_vid; ++vid)
-    {
+    for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
         w_vertex[vid].resize(dim);
-        for (int d=0; d<dim;++d)
-            w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+
+        for (int d=0; d<dim;++d){
+            //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+            w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+        }
+
         w_context[vid].resize(dim);
+        
         for (int d=0; d<dim;++d)
             w_context[vid][d] = 0.0;
     }

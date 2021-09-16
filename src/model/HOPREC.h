@@ -27,7 +27,7 @@ class HOPREC {
         void SaveWeights(string);
         
         // model function
-        void Init(int);
+        void Init(int, string);
         void Train(int, int, double, int);
 
 };
