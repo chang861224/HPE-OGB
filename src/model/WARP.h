@@ -25,7 +25,7 @@ class WARP {
         void SaveWeights(string);
         
         // model function
-        void Init(int, string);
+        void Init(int, string, bool);
         void Train(int, int, double, double, int);
 
 };
