@@ -43,7 +43,7 @@ void BPR::Init(int dim, string embed_path, bool directed) {
     vec.resize(2927963);
     ifstream infile;
 
-    cout << embed_path << endl;
+    cout << "Pre-Trained Embedding:\t< " << embed_path << " >" << endl;
     infile.open(embed_path);
     
     for(long i = 0 ; i < 2927963 ; i++){
@@ -69,7 +69,7 @@ void BPR::Init(int dim, string embed_path, bool directed) {
             char* vertex = strtok(pnet.vertex_hash.keys[vid], "ST");
             //cout << pnet.vertex_hash.keys[vid] << " " << vertex << endl;
 
-            for (int d=0; d<dim;++d){
+            for (int d = 0 ; d < dim ; ++d){
                 //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
                 //w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
                 w_vertex[vid][d] = vec[stol(vertex)][d];
@@ -80,7 +80,7 @@ void BPR::Init(int dim, string embed_path, bool directed) {
         for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
             w_vertex[vid].resize(dim);
 
-            for (int d=0; d<dim;++d){
+            for (int d = 0 ; d < dim ; ++d){
                 //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
                 w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
             }
