@@ -46,7 +46,7 @@ void HOPREC::Init(int dim, string embed_path) {
     vec.resize(2927963);
     ifstream infile;
 
-    cout << embed_path << endl;
+    cout << "Pre-Trained Embedding:\t< " << embed_path << " >" << endl;
     infile.open(embed_path);
     
     for(long i = 0 ; i < 2927963 ; i++){
