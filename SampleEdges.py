@@ -32,7 +32,7 @@ print("Generate dataset meta")
 
 with open("node-year.txt", "w") as f:
     for idx, year in tqdm(enumerate(years)):
-        f.write("{} {}\n".format(idx + 1, int(year[0])))
+        f.write("{} {}\n".format(idx, int(year[0])))
 
 # Generate build-in features
 print("Generate build-in features file")
