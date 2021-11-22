@@ -37,7 +37,7 @@ with open("node-year.txt", "w") as f:
             f.write("T{} {}\n".format(idx, int(year[0])))
         else:
             f.write("{} {}\n".format(idx, int(year[0])))
-'''
+
 # Generate build-in features
 print("Generate build-in features file")
 
@@ -72,6 +72,6 @@ with open(train_network, "w") as f:
             f.write("S{} T{} 1\n".format(source, target))
         else:
             f.write("{} {} 1\n".format(source, target))
-'''
+
 print("Done!!")
 
