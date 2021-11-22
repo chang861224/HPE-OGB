@@ -57,18 +57,27 @@ void HPE::Init(int dim, string embed_path) {
     for (long vid = 0 ; vid < pnet.MAX_vid ; ++vid){
         w_vertex[vid].resize(dim);
 
-        for (int d=0; d<dim;++d){
-            //w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
-            w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+        for (int d = 0; d<dim;++d){
+            if(d < 128){
+                w_vertex[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+            }
+            else{
+                w_vertex[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+            }
         }
     }
 
     for (long vid=0; vid<pnet.MAX_vid; ++vid){
         w_context[vid].resize(dim);
 
-        for (int d=0; d<dim;++d)
-            //w_context[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
-            w_context[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+        for (int d = 0; d<dim;++d){
+            if(d < 128){
+                w_context[vid][d] = vec[stol(pnet.vertex_hash.keys[vid])][d];
+            }
+            else{
+                w_context[vid][d] = (rand()/(double)RAND_MAX - 0.5) / dim;
+            }
+        }
     }
 }
 
