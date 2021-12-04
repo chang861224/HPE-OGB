@@ -11,14 +11,12 @@ parser = argparse.ArgumentParser(description="OGB Dataset")
 parser.add_argument("--dataset", type=str, default="ogbl-citation2")
 parser.add_argument("--train_network", type=str, default="network.txt")
 parser.add_argument("--train_percent", type=int, default=100)
-parser.add_argument("--tag", type=bool, default=False)
 args = parser.parse_args()
 
 # Save arguments to variables
 dataset_name = args.dataset
 train_network = args.train_network
 train_percent = args.train_percent
-tag = args.tag
 
 # Load dataset from OGB
 dataset = PygLinkPropPredDataset(name=dataset_name)
@@ -32,11 +30,7 @@ print("Generate dataset meta")
 
 with open("node-year.txt", "w") as f:
     for idx, year in tqdm(enumerate(years)):
-        if tag == True:
-            f.write("S{} {}\n".format(idx, int(year[0])))
-            f.write("T{} {}\n".format(idx, int(year[0])))
-        else:
-            f.write("{} {}\n".format(idx, int(year[0])))
+        f.write("{} {}\n".format(idx, int(year[0])))
 
 # Generate build-in features
 print("Generate build-in features file")
@@ -68,10 +62,7 @@ with open(train_network, "w") as f:
         source = edge[0]
         target = edge[1]
 
-        if tag == True:
-            f.write("S{} T{} 1\n".format(source, target))
-        else:
-            f.write("{} {} 1\n".format(source, target))
+        f.write("{} {} 1\n".format(source, target))
 
 print("Done!!")
 

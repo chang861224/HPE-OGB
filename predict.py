@@ -11,14 +11,12 @@ parser.add_argument("--dataset", type=str, default="ogbl-citation2")
 parser.add_argument("--val_percent", type=float, default=100)
 parser.add_argument("--test_percent", type=float, default=100)
 parser.add_argument("--embed", type=str, default="ogbl-citation2/node-feat.csv")
-parser.add_argument("--tag", type=bool, default=False)
 args = parser.parse_args()
 
 embed_path = args.embed
 dataset_name = args.dataset
 val_percent = args.val_percent
 test_percent = args.test_percent
-tag = args.tag
 
 # Load node embedding
 if embed_path.endswith("rep.txt"):
@@ -61,12 +59,8 @@ pos_scores = list()
 neg_scores = list()
 
 for idx in tqdm(val_sample_index):
-    if tag == True:
-        source = "S" + str(int(valid_edge["source_node"][idx]))
-        target = "T" + str(int(valid_edge["target_node"][idx]))
-    else:
-        source = str(int(valid_edge["source_node"][idx]))
-        target = str(int(valid_edge["target_node"][idx]))
+    source = str(int(valid_edge["source_node"][idx]))
+    target = str(int(valid_edge["target_node"][idx]))
 
     target_neg = valid_edge["target_node_neg"][idx].tolist()
 
@@ -79,10 +73,7 @@ for idx in tqdm(val_sample_index):
     neg_score = list()
     for ix, node in enumerate(target_neg):
         try:
-            if tag == True:
-                score = np.dot(embedding[source], embedding["T" + str(node)])
-            else:
-                score = np.dot(embedding[source], embedding[str(node)])
+            score = np.dot(embedding[source], embedding[str(node)])
         except:
             score = 0.0
         neg_score.append(score)
@@ -96,12 +87,8 @@ pos_scores = list()
 neg_scores = list()
 
 for idx in tqdm(test_sample_index):
-    if tag == True:
-        source = "S" + str(int(test_edge["source_node"][idx]))
-        target = "T" + str(int(test_edge["target_node"][idx]))
-    else:
-        source = str(int(test_edge["source_node"][idx]))
-        target = str(int(test_edge["target_node"][idx]))
+    source = str(int(test_edge["source_node"][idx]))
+    target = str(int(test_edge["target_node"][idx]))
 
     target_neg = test_edge["target_node_neg"][idx].tolist()
 
@@ -114,10 +101,7 @@ for idx in tqdm(test_sample_index):
     neg_score = list()
     for ix, node in enumerate(target_neg):
         try:
-            if tag == True:
-                score = np.dot(embedding[source], embedding["T" + str(node)])
-            else:
-                score = np.dot(embedding[source], embedding[str(node)])
+            score = np.dot(embedding[source], embedding[str(node)])
         except:
             score = 0.0
         neg_score.append(score)
