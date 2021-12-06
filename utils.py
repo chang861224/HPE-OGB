@@ -32,7 +32,6 @@ def SplitDataset(dataset, percent=10):
             edgelist[source] = list()
             edgelist[source].append(target)
 
-    print(len(edgelist))
     num_sample = int(len(edgelist) * percent / 100)
     sample_instances = random.sample(edgelist.keys(), num_sample)
     sample_set = {
