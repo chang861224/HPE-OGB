@@ -44,7 +44,7 @@ In this compilation process, we can decompose it into two parts:
 - Native `smore` program; because we would like to use the HPE module in this project.
 - Content-based initialized HPE program; because we would like to use the pre-trained features provided by dataset to initial node embedding to train the HPE model.
 
-After compilation, there are execution files, `HPE` and `BPR`, generated.
+After compilation, there are execution files, `HPE`, generated. Moreover, there are `BPR`, `HOP-REC`, and `WARP` execution files generated also. You can try these methods which contains in SMORe project if you want.
 
 ### Network Format
 To use HPE in `smore` module, first we have to generate the connection network of our dataset. The format of the network should be like this:
@@ -99,8 +99,8 @@ After we generate the node embedding file, we can use it on our prediction task.
 
 - `--dataset`: The dataset of our prediction task. Default is `ogbl-citation2`.
 - `--embed`: The file which save the embedding of each nodes. Default is `hpe_rep.txt`.
-- `val_percent`: The number of percentage of validation set you want to test for the evaluation score. Default is 100.
-- `test_percent`: The number of percentage of testing set you want to test for the evaluation score. Default is 100.
+- `--val_percent`: The number of percentage of validation set you want to test for the evaluation score. Default is 100.
+- `--test_percent`: The number of percentage of testing set you want to test for the evaluation score. Default is 100.
 
 Suppose we set both `--val_percent` and `test_percent` as 20, the command we run `predict.py` should be like this:
 
